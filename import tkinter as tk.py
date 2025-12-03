@@ -78,14 +78,26 @@ def animate_move(canvas, token_id, start, end, delay = 200):
     canvas.after(delay, lambda:
                  animate_move(canvas, token_id, start + 1, end, delay))
 
+def roll_dice(canvas, token, root, dice_label):
+    global player_position
+    def finish_roll():
+        global player_position
+        dice = random.randint(1, 6)
+        dice_label.config(text=str(dice))
+        print("Dadu", dice)
+        new_position = player_position + dice
+        if new_position in ladders:
+            print("Naik Tangga", new_position, " -> ", ladders[new_position])
+            new_position = ladders[new_position]
+        elif new_position in snakes:
+            print("Astaga Kena ular!", new_position,"->", snakes[new_position])
+            new_position = snakes[new_position]
+        if new_position > 100:
+            new_position = 100
+        animate_move(canvas, token,player_position, new_position)
+        player_position = new_position
+    animate_dice(root, dice_label, finish_roll)    
     
-    
-
-
-
-
-
-
 def main():
     root = tk.Tk()
     root.title("Game Ular Tangga - GUI")
@@ -96,4 +108,5 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
